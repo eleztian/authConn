@@ -49,7 +49,7 @@ if err != nil {
 _ = conn.Close()
 ```
 
-### Cluster Auth Way
+### Customer Auth Way
 
 ```go
 // AuthToken implement auth.Credential
