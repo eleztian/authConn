@@ -2,6 +2,7 @@ package authConn
 
 import (
 	"context"
+	"crypto/tls"
 	"io"
 	"log"
 	"net"
@@ -54,6 +55,41 @@ func Listen(network, address string, authFunc Auth) (net.Listener, error) {
 	go res.start()
 
 	return res, nil
+}
+
+func ListenTls(network, address string, tlsConfig *tls.Config, authFunc Auth) (net.Listener, error) {
+	ln, err := tls.Listen(network, address, tlsConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	res := &Listener{
+		ln:       ln,
+		ctx:      ctx,
+		cancel:   cancel,
+		wg:       &sync.WaitGroup{},
+		authFunc: authFunc,
+		ch:       make(chan net.Conn, defaultConnBufSize),
+	}
+	go res.start()
+
+	return res, nil
+}
+
+func ListenWithAuth(ln net.Listener, authFunc Auth) net.Listener {
+	ctx, cancel := context.WithCancel(context.Background())
+	res := &Listener{
+		ln:       ln,
+		ctx:      ctx,
+		cancel:   cancel,
+		wg:       &sync.WaitGroup{},
+		authFunc: authFunc,
+		ch:       make(chan net.Conn, defaultConnBufSize),
+	}
+	go res.start()
+
+	return res
 }
 
 func (l *Listener) start() {
