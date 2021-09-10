@@ -44,7 +44,7 @@
     </configuration>
     <configuration name="TestDialer in git.moresec.cn/cloudplatform/authConn" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="authConn" />
-      <working_directory value="$PROJECT_DIR$/../authConn" />
+      <working_directory value="$PROJECT_DIR$" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
       <package value="git.moresec.cn/cloudplatform/authConn" />
@@ -55,7 +55,7 @@
     </configuration>
     <configuration name="TestListener in git.moresec.cn/cloudplatform/authConn" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="authConn" />
-      <working_directory value="$PROJECT_DIR$/../authConn" />
+      <working_directory value="$PROJECT_DIR$" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
       <package value="git.moresec.cn/cloudplatform/authConn" />
