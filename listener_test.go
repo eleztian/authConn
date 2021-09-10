@@ -1,6 +1,7 @@
 package authConn
 
 import (
+	"errors"
 	"fmt"
 	"github.com/eleztian/authConn/auth"
 	"sync"
@@ -8,24 +9,20 @@ import (
 )
 
 func TestListener(t *testing.T) {
-
-	ln, err := Listen("tcp", ":8082",
-		func(authPacket *AuthPacket) (rc byte, credential auth.Credential) {
-			fmt.Println("auth", authPacket)
-			cre := &auth.BasicCredential{}
-			err := authPacket.ToCredential(cre)
-			if err != nil {
-				fmt.Println("auth", err)
-				return 1, nil
-			}
-			if cre.Username != "john" || cre.Password != "123" {
-				return 1, nil
-			}
-			return 0, cre
-		})
+	authFunc := func(authPacket *AuthPacket) (rc byte, credential auth.Credential) {
+		cre := &auth.BasicCredential{}
+		err := authPacket.ToCredential(cre)
+		if err != nil {
+			return 1, nil
+		}
+		if cre.Username != "john" || cre.Password != "123" {
+			return 1, nil
+		}
+		return 0, cre
+	}
+	ln, err := Listen("tcp", ":8082", authFunc)
 	if err != nil {
-		t.Error(err)
-		return
+		panic(err)
 	}
 	defer ln.Close()
 
@@ -62,4 +59,34 @@ func TestDialer(t *testing.T) {
 	}
 	wg.Wait()
 
+}
+
+type AuthToken struct {
+	tk string
+}
+
+func (a AuthToken) Detail() map[string]string {
+	return map[string]string{
+		"tk": a.tk,
+	}
+}
+
+func (a *AuthToken) Reset(m map[string]string) error {
+	tk, ok := m["tk"]
+	if !ok {
+		return errors.New("not found tk")
+	}
+	a.tk = tk
+	return nil
+}
+
+func TestCluster(t *testing.T) {
+	conn, err := Dial("tcp", "127.0.0.1:8082", &AuthToken{
+		tk: "token",
+	})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	conn.Close()
 }
