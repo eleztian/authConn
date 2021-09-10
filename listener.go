@@ -43,7 +43,7 @@ func Listen(network, address string, authFunc Auth) (net.Listener, error) {
 		cancel:   cancel,
 		wg:       &sync.WaitGroup{},
 		authFunc: authFunc,
-		ch:       make(chan net.Conn, 5),
+		ch:       make(chan net.Conn, 1),
 	}
 	go res.start()
 
@@ -94,6 +94,7 @@ func (l *Listener) start() {
 				if authRsp.ReturnCode != 0 {
 					_ = conn.Close()
 					log.Printf("Conn: auth failed %d", authRsp.ReturnCode)
+					return
 				}
 
 				conn = &ConnWithCredential{

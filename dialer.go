@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"git.moresec.cn/cloudplatform/authConn/auth"
+	"github.com/eleztian/authConn/auth"
 )
 
 type Dialer struct {

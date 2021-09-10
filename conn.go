@@ -1,7 +1,7 @@
 package authConn
 
 import (
-	"git.moresec.cn/cloudplatform/authConn/auth"
+	"github.com/eleztian/authConn/auth"
 	"net"
 )
 
