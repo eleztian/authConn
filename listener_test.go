@@ -26,6 +26,7 @@ func TestListener(t *testing.T) {
 	}
 	defer ln.Close()
 
+	i := 0
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
@@ -35,6 +36,10 @@ func TestListener(t *testing.T) {
 		creConn := conn.(*ConnWithCredential)
 		fmt.Println("accept", creConn.Credential.Detail())
 		_ = conn.Close()
+		i++
+		if i == 10 {
+			_ = ln.Close()
+		}
 	}
 
 }
