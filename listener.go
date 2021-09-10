@@ -130,11 +130,11 @@ func (l *Listener) Close() error {
 		return err
 	}
 
+	l.wg.Wait()
+
 	for conn := range l.ch {
 		_ = conn.Close()
 	}
-
-	l.wg.Wait()
 
 	return nil
 }
