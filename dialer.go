@@ -147,12 +147,10 @@ func TlsDial(network, address string, config *tls.Config, credential auth.Creden
 }
 
 func TlsDialContext(ctx context.Context, network, address string, config *tls.Config, credential auth.Credential) (net.Conn, error) {
-	d := &TlsDialer{
-		Dialer: &tls.Dialer{
-			NetDialer: &net.Dialer{},
-			Config:    config,
-		},
-	}
+	d := NewTlsDialer(&tls.Dialer{
+		NetDialer: &net.Dialer{},
+		Config:    config,
+	}, credential)
 	return d.DialContext(ctx, network, address)
 }
 
