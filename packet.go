@@ -40,7 +40,7 @@ func ReadPacket(reader io.Reader) (res Packet, err error) {
 
 func decodeByte(b io.Reader) (byte, error) {
 	num := make([]byte, 1)
-	_, err := b.Read(num)
+	_, err := io.ReadFull(b, num)
 	if err != nil {
 		return 0, err
 	}
@@ -50,7 +50,7 @@ func decodeByte(b io.Reader) (byte, error) {
 
 func decodeUint16(b io.Reader) (uint16, error) {
 	num := make([]byte, 2)
-	_, err := b.Read(num)
+	_, err := io.ReadFull(b, num)
 	if err != nil {
 		return 0, err
 	}
@@ -59,7 +59,7 @@ func decodeUint16(b io.Reader) (uint16, error) {
 
 func decodeUint64(b io.Reader) (uint64, error) {
 	num := make([]byte, 8)
-	_, err := b.Read(num)
+	_, err := io.ReadFull(b, num)
 	if err != nil {
 		return 0, err
 	}
@@ -94,7 +94,7 @@ func decodeBytes(b io.Reader) ([]byte, error) {
 	}
 
 	field := make([]byte, fieldLength)
-	_, err = b.Read(field)
+	_, err = io.ReadFull(b, field)
 	if err != nil {
 		return nil, err
 	}

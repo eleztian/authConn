@@ -70,7 +70,7 @@ func (a *AuthRspPacket) Packet() []byte {
 
 func (a *AuthRspPacket) reset(src io.Reader) error {
 	res := make([]byte, 1)
-	_, err := src.Read(res)
+	_, err := io.ReadFull(src, res)
 	if err != nil {
 		return err
 	}
